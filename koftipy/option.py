@@ -23,7 +23,7 @@ class Option(Generic[T]):
             value: A value
 
         Returns:
-            Some(value) if value is not None, Nothing otherwise
+            Some(value) if value is not None, Nothing otherwise.
 
         Examples:
             assert Option.of(0) == Some(0)
@@ -81,7 +81,7 @@ class Option(Generic[T]):
     def when(condition: bool, value: Union[T, Supplier[T]]) -> Option[T]:
         """
         Creates Some(value) (or Some(value()) if value is a supplier function)
-        if condition satisfies, Nothing otherwise.
+        if the condition satisfies, Nothing otherwise.
 
         Args:
             condition: Condition to be satisfied
