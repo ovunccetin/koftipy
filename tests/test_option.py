@@ -1,6 +1,6 @@
 import pytest
 
-from koftipy import Option, Some, Nothing
+from koftipy import *
 
 
 def test_of():
@@ -54,6 +54,11 @@ def test_get_or_else():
     assert Nothing.get_or_else(lambda: 2) == 2
 
 
+def test_get_or_none():
+    assert Some(1).or_none() == 1
+    assert Nothing.or_none() is None
+
+
 def test_or_else():
     assert Some(1).or_else(Some(2)) == Some(1)
     assert Some(1).or_else(lambda: Some(2)) == Some(1)
@@ -105,6 +110,7 @@ def test_flatten():
 def test_filter():
     assert Some(3).filter(lambda x: x > 0) == Some(3)
     assert Some(3).filter(lambda x: x < 0) == Nothing
+    assert Some(3).filter(instance_of(int)) == Some(3)
     assert Nothing.filter(lambda x: True) == Nothing
 
 
@@ -146,13 +152,15 @@ def test_if_empty():
 
 
 def test_fold():
-    result = []
+    assert Option.some(1).fold(
+        if_empty=lambda: 0,
+        if_defined=lambda x: x + 1
+    ) == 2
 
-    Some(3).fold(if_empty=lambda: result.append('e'), if_defined=result.append)
-    Nothing.fold(if_empty=lambda: result.append('e'), if_defined=result.append)
-
-    assert result == [3, 'e']
-    assert Some(4).fold(if_empty=lambda: None, if_defined=lambda x: x * 5) == 20
+    assert Option.nothing().fold(
+        if_empty=lambda: 0,
+        if_defined=lambda x: x + 1
+    ) == 0
 
 
 def test_string_representation():
