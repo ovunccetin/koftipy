@@ -11,7 +11,7 @@ _ctor_key = object()
 
 class Option(Generic[T]):
     """
-    Represents an optional value which can be defined or empty/undefined. If it is defined, then it is an
+    Represents an optional value which can be defined or empty. If it is defined, then it is an
     instance of Some class. Otherwise, if it is undefined, it is Nothing object.
 
     Option is an immutable construct.
