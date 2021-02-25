@@ -35,5 +35,23 @@ def test_map():
     assert lazyval == Lazy.of(lambda: '10')
 
 
+def test_filter():
+    lazyval = Lazy.of(lambda: 3)
+
+    assert lazyval.filter(lambda x: x >= 0) == Option.some(3)
+    assert lazyval.filter(lambda x: x < 0) == Option.nothing()
+
+    assert Lazy.of(lambda: None).filter(lambda x: x is None) == Option.some(None)
+
+
+def test_filter_not():
+    lazyval = Lazy.of(lambda: -3)
+
+    assert lazyval.filter_not(lambda x: x >= 0) == Option.some(-3)
+    assert lazyval.filter_not(lambda x: x < 0) == Option.nothing()
+
+    assert Lazy.of(lambda: None).filter_not(lambda x: x is not None) == Option.some(None)
+
+
 def random_digit():
     return random.randint(0, 10)
