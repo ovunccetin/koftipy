@@ -24,15 +24,15 @@ class Lazy(Generic[T]):
         def random_digit():
             return random.randint(0, 10)
 
-        lv: Lazy[int] = Lazy.of(random_digit)
-        assert lv.is_computed() is False
+        lazynum: Lazy[int] = Lazy.of(random_digit)
+        assert lazynum.is_computed() is False
 
-        value: int = lv.get()  # or lv()
-        assert lv.is_computed() is True
+        value: int = lazynum.get()  # or lazynum()
+        assert lazynum.is_computed() is True
 
         # once computed, always the same value is provided
         for i in range(100):
-            assert lv.get() == value
+            assert lazynum.get() == value
     """
 
     def __init__(self, supplier: Supplier[T], ctor_key: object):
@@ -95,13 +95,22 @@ class Lazy(Generic[T]):
     def map(self, f: Function[T, U]) -> Lazy[U]:
         """
         Maps the value of this Lazy to another one by applying the given mapper function `f`.
-        This call does not compute the value of this Lazy.
+        This call does not cause this Lazy to be computed.
 
         Args:
             f: mapper function
 
         Returns:
             Mapped lazy
+
+        Examples:
+            def random_digit():
+                return random.randint(0, 10)
+
+            lazynum: Lazy[int] = Lazy.of(random_digit)
+            lazystr: Lazy[str] = lazynum.map(lambda x: str(x))  # not computed yet
+
+            lazystr.get()  # computes here
         """
         return Lazy.of(lambda: f(self.get()))
 
@@ -142,9 +151,26 @@ class Lazy(Generic[T]):
         return self.filter(Predicate.of(p).negate())
 
     def __call__(self):
+        """
+        A convenience to retrieve the value by directly calling this Lazy instead of get() method.
+        So, `lazyval()` is identical to `lazyval.get()`
+
+        Returns:
+            the computed value
+        """
         return self.get()
 
     def __eq__(self, other: object) -> bool:
+        """
+        This and other are equal, if both are Lazy and their computed values are equal.
+        Note that, this call causes both Lazy objects (this and the other) to be computed.
+
+        Args:
+            other: the other object to check
+
+        Returns:
+            True if this and other are both Lazy and their computed values are equal.
+        """
         if not isinstance(other, Lazy):
             return False
         elif self is other:
@@ -153,6 +179,12 @@ class Lazy(Generic[T]):
             return self.get() == other.get()
 
     def __hash__(self) -> int:
+        """
+        Computes the value and returns hash of it.
+
+        Returns:
+            Hash of the computed value.
+        """
         return hash(self.get())
 
     def __compute_value(self) -> T:
