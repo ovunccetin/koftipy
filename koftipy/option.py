@@ -111,6 +111,36 @@ class Option(Generic[T]):
         else:
             return Option.nothing()
 
+    @staticmethod
+    def sequence(options: Iterable[Option[T]]) -> Option[List[T]]:
+        """
+        Reduces a list of Options into a single Option of values. If any of the given
+        Options are Nothing, then this returns Nothing.
+
+        Args:
+            options: a list of Options to be reduced
+
+        Returns:
+            a single Option of values
+
+        Examples:
+            options: List[Option[int]] = [Some(1), Some(2), Some(3)]
+            assert Option.sequence(options) == Some([1, 2, 3])
+
+            options: List[Option[int]] = [Some(1), Nothing, Some(3)]
+            assert Option.sequence(options) is Nothing
+        """
+        assert options is not None
+
+        values: List[T] = []
+        for opt in options:
+            if opt.is_empty():
+                return Nothing
+            else:
+                values.append(opt.get())
+
+        return Option.some(values)
+
     def __iter__(self):
         """
         Returns an iterator of this Option.

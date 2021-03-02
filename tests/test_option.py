@@ -40,6 +40,12 @@ def test_when():
     assert Option.when(False, value=1000) == Nothing
 
 
+def test_sequence():
+    assert Option.sequence([]) == Some([])
+    assert Option.sequence([Some(1), Some(2), Some(3)]) == Some([1, 2, 3])
+    assert Option.sequence([Some(1), Nothing, Some(3)]) is Nothing
+
+
 def test_get():
     assert Some(1).get() == 1
     with pytest.raises(ValueError):
