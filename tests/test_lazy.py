@@ -1,3 +1,5 @@
+from typing import List
+
 from koftipy import *
 import random
 
@@ -51,6 +53,18 @@ def test_filter_not():
     assert lazyval.filter_not(lambda x: x < 0) == Option.nothing()
 
     assert Lazy.of(lambda: None).filter_not(lambda x: x is not None) == Option.some(None)
+
+
+def test_sequence():
+    lazies: List[Lazy[int]] = [Lazy.of(lambda: 1), Lazy.of(lambda: 2), Lazy.of(lambda: 3)]
+    lazy_seq: Lazy[List[int]] = Lazy.sequence(lazies)
+
+    assert lazies[0].is_computed() is False
+    assert lazies[1].is_computed() is False
+    assert lazies[2].is_computed() is False
+    assert lazy_seq.is_computed() is False
+
+    assert lazy_seq.get() == [1, 2, 3]
 
 
 def random_digit():

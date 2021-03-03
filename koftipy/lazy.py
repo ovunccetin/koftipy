@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import threading
-from typing import TypeVar, Generic, Union
+from typing import TypeVar, Generic, Union, Iterable, List
 
 from ._types import Supplier, Function, PredicateFn
 from .iterator import Iterator
@@ -60,6 +60,23 @@ class Lazy(Generic[T]):
             return supplier
         else:
             return Lazy(supplier, _ctor_key)
+
+    @staticmethod
+    def sequence(lazies: Iterable[Lazy[T]]) -> Lazy[List[T]]:
+        """
+        Reduces a list of Lazy values into a single Lazy. This call doesn't cause the lazy objects
+        in the given list to be computed.
+
+        Args:
+            lazies: a list of Lazy objects
+
+        Returns:
+            a single Lazy object containing the list of values computed by given Lazy objects
+
+        Examples:
+            assert Lazy.sequence([Lazy.of(lambda: 1), Lazy.of(lambda: 2)]) == [1, 2]
+        """
+        return Lazy.of(lambda: list(map(lambda lazy: lazy.get(), lazies)))
 
     def get(self) -> T:
         """
