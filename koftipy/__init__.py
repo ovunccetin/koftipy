@@ -1,3 +1,3 @@
-from koftipy.control.option import *
 from .predicate import *
-from koftipy.control.lazy import *
+from .control import Lazy, Option, Some, Nothing
+from .collection import Iterator, Traversable
