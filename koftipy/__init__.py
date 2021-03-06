@@ -1,3 +1,3 @@
-from .option import *
+from koftipy.control.option import *
 from .predicate import *
-from .lazy import *
+from koftipy.control.lazy import *

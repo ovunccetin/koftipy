@@ -3,10 +3,10 @@ from __future__ import annotations
 import threading
 from typing import TypeVar, Generic, Union, Iterable, List
 
-from ._types import Supplier, Function, PredicateFn
-from .iterator import Iterator
+from koftipy.typing import Supplier, Function, PredicateFn
+from koftipy.collection.iterator import Iterator
 from .option import Option
-from .predicate import Predicate
+from koftipy.predicate import Predicate
 
 T = TypeVar('T')
 U = TypeVar('U')

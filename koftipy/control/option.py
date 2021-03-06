@@ -1,8 +1,8 @@
 from __future__ import annotations
 from typing import *
-from .iterator import Iterator
-from .predicate import Predicate
-from ._types import *
+from koftipy.collection.iterator import Iterator
+from koftipy.predicate import Predicate
+from koftipy.typing import *
 
 T = TypeVar('T')
 U = TypeVar('U')
